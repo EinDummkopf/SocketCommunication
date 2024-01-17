@@ -3,14 +3,19 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <socket.h>
+#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+
+#include <netdb.h>
+#include <signal.h>
+#include <fcntl.h>
 #define BUFSIZE 65536
 
 char *CURR_MY_PATH_ROOT;
 
 void error_handling(char *message);
+void request_handler(void *);
 
 int main(int argc, char **argv){
     CURR_MY_PATH_ROOT = getenv("PWD");
@@ -62,4 +67,16 @@ void error_handling(char *message){
     fputs(message, stderr);
     fputs("\n", stderr);
     exit(1);
+}
+
+void request_handler(void *arg){
+    char msg[BUFSIZE];
+    char *firstLine[3];
+
+    int sd = *(int*)arg; // casting
+    int rcvd =  recv(sd, msg, BUFSIZE-1, 0);
+    if(rcvd<=0) error_handling("Error about recv()!!");
+    printf("----------Request message from Client----------\n");
+    printf("%s", msg);
+    printf("\n----------------------------------------------\n");
 }
