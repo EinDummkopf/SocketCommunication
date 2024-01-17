@@ -44,6 +44,18 @@ int main(int argc, char **argv){
     if(listen(serv_sock, 5) == -1){
         error_handling("listen() error");
     }
+    while(1){
+        clnt_addr_size=sizeof(clnt_addr);
+        clnt_sock=accept(serv_sock, (struct sockaddr*)&clnt_addr,&clnt_addr_size);
+        if(clnt_sock==-1){
+    	    error_handling("accept() error");
+            break;
+        }  
+        printf("Connection Request : %s:%d\n", inet_ntoa(clnt_addr.sin_addr), ntohs(clnt_addr.sin_port));
+        request_handler(&clnt_sock);
+    }
+    close(clnt_sock);
+    return 0;
 }
 
 void error_handling(char *message){
