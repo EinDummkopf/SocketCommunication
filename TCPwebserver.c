@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #define BUFSIZE 65536
+#define SEND_MESSAGE_BUFSIZE 1024
 
 char *CURR_MY_PATH_ROOT;
 
@@ -79,4 +80,12 @@ void request_handler(void *arg){
     printf("----------Request message from Client----------\n");
     printf("%s", msg);
     printf("\n----------------------------------------------\n");
+
+    char post_information[SEND_MESSAGE_BUFSIZE];
+    char *curr_msg = NULL;
+    char METHOD[4] = "";
+    char VERSION[10] = "";
+    char URL[SEND_MESSAGE_BUFSIZE] = "";
+
+    curr_msg = strtok(msg, "\n");
 }
