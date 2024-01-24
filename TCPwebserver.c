@@ -122,4 +122,5 @@ void GET_handler(char *V, char *message, char *U, int client){
     if(strncmp(VERSION, "HTTP/1.0", 8)!=0 && strncmp(VERSION, "HTTP/1.1", 8)!=0){
         write(client, "HTTP/1.1 400 Bad Request\n", 25);
     }
+    if(strlen(URL) == 1 && !strncmp(URL, "/", 1)) strcpy(URL, "/index.html");
 }
