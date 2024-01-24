@@ -88,4 +88,11 @@ void request_handler(void *arg){
     char URL[SEND_MESSAGE_BUFSIZE] = "";
 
     curr_msg = strtok(msg, "\n");
+    
+    int line_count = 1;
+    while(curr_msg){
+        if(line_count>=15) strcpy(post_information, curr_msg);
+        curr_msg = strtok(NULL, "\n");
+        line_count++;
+    }
 }
