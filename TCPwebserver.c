@@ -106,7 +106,10 @@ void request_handler(void *arg){
     strcpy(URL, firstLine[1]);
     strcpy(VERSION, firstLine[2]);
 
-    if(!strncmp(METHOD, "GET", 3)) return 0; // error except
+    if(!strncmp(METHOD, "GET", 3)) GET_handler(VERSION, msg, URL, sd);
+
+    shutdown(sd, SHUT_RDWR);
+    close(sd);
 }
 
 void GET_handler(char *V, char *message, char *U, int client){
@@ -123,4 +126,18 @@ void GET_handler(char *V, char *message, char *U, int client){
         write(client, "HTTP/1.1 400 Bad Request\n", 25);
     }
     if(strlen(URL) == 1 && !strncmp(URL, "/", 1)) strcpy(URL, "/index.html");
+
+    strcpy(FINAL_PATH, CURR_MY_PATH_ROOT);
+    strcat(FINAL_PATH, URL);
+
+    if((fd=open(FINAL_PATH, O_RDONLY)) != -1){
+        send(client, "HTTP/1.0 200 OK\n\n", 17, 0);
+        while(1){
+            str_len = read(fd, SEND_DATA, SEND_MESSAGE_BUFSIZE);
+            if(str_len<=0) break;
+            write(client, SEND_DATA, str_len);
+        }
+    } else {
+        write(client, "HTTP/1.1 404 Not Found\n", 23);
+    }
 }
