@@ -17,6 +17,8 @@ char *CURR_MY_PATH_ROOT;
 
 void error_handling(char *message);
 void request_handler(void *);
+void GET_handler(char *, char *, char *, int);
+void POST_handler(char *, char *, char *, int, char *);
 
 int main(int argc, char **argv){
     CURR_MY_PATH_ROOT = getenv("PWD");
@@ -95,4 +97,14 @@ void request_handler(void *arg){
         curr_msg = strtok(NULL, "\n");
         line_count++;
     }
-}
+
+    firstLine[0] = strtok(msg, " \t\n");
+    firstLine[1] = strtok(NULL, " \t");
+    firstLine[2] = strtok(NULL, " \t\n");
+
+    strcpy(METHOD, firstLine[0]);
+    strcpy(URL, firstLine[1]);
+    strcpy(VERSION, firstLine[2]);
+
+    if(!strncmp(METHOD, "GET", 3)) continue; // error
+}d
