@@ -106,5 +106,20 @@ void request_handler(void *arg){
     strcpy(URL, firstLine[1]);
     strcpy(VERSION, firstLine[2]);
 
-    if(!strncmp(METHOD, "GET", 3)) continue; // error
-}d
+    if(!strncmp(METHOD, "GET", 3)) return 0; // error except
+}
+
+void GET_handler(char *V, char *message, char *U, int client){
+    int fd, str_len;
+    char SEND_DATA[SEND_MESSAGE_BUFSIZE];
+    char FINAL_PATH[BUFSIZE];
+    char VERSION[10]="";
+    char URL[SEND_MESSAGE_BUFSIZE]="";
+
+    strcpy(VERSION, V);
+    strcpy(URL, U);
+
+    if(strncmp(VERSION, "HTTP/1.0", 8)!=0 && strncmp(VERSION, "HTTP/1.1", 8)!=0){
+        write(client, "HTTP/1.1 400 Bad Request\n", 25);
+    }
+}
